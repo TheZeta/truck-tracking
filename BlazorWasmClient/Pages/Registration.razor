@@ -1,0 +1,65 @@
+﻿@page "/registration"
+@using System.ComponentModel.DataAnnotations
+@using System.Reflection
+@inject TruckService TruckService
+@inject Blazored.Toast.Services.IToastService ToastService
+
+<h3>Truck Details</h3>
+
+<EditForm Model="@truckDto" OnValidSubmit="HandleSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="plate">Plate:</label>
+        <InputText id="plate" class="form-control" @bind-Value="truckDto.LicensePlate" />
+        <ValidationMessage For="@(() => truckDto.LicensePlate)" />
+    </div>
+
+    <div class="form-group">
+        <label for="rawMaterial">Raw Material:</label>
+        <InputSelect id="rawMaterial" class="form-control" @bind-Value="truckDto.RawMaterial">
+            <option value="">Select a material</option>
+            @foreach (var material in rawMaterials)
+            {
+                <option value="@material">@material</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => truckDto.RawMaterial)" />
+    </div>
+
+    <div class="form-group">
+        <label for="weight">Weight:</label>
+        <InputNumber id="weight" class="form-control" @bind-Value="truckDto.ClaimedRawMaterialWeight" />
+        <span class="form-control-plaintext">kg</span>
+        <ValidationMessage For="@(() => truckDto.ClaimedRawMaterialWeight)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private TruckDto truckDto = new TruckDto();
+    private List<string> rawMaterials;
+
+    protected override void OnInitialized()
+    {
+        rawMaterials = Enum.GetValues(typeof(RawMaterialType))
+                        .Cast<RawMaterialType>()
+                        .Select(e => e.ToString())
+                        .ToList();
+    }
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            await TruckService.AddAsync(truckDto);
+            ToastService.ShowSuccess("Truck added successfully!");
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
+    }
+}

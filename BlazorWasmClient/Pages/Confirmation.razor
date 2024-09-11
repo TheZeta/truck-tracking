@@ -1,0 +1,49 @@
+﻿@page "/confirmation"
+@inject TruckService TruckService
+
+<h3>Truck List</h3>
+
+@if (trucks != null && trucks.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Plate</th>
+                <th>Raw Material</th>
+                <th>Weight (kg)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var truck in trucks)
+            {
+                <tr>
+                    <td>@truck.LicensePlate</td>
+                    <td>@truck.RawMaterial</td>
+                    <td>@truck.ClaimedRawMaterialWeight</td>
+                    <td>
+                        <button class="btn btn-success" @onclick="() => ApproveTruck(truck)">Approve</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No trucks available.</p>
+}
+
+@code {
+    private IEnumerable<TruckDto> trucks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        trucks = await TruckService.GetVisibleTrucksAsync();
+    }
+
+    private void ApproveTruck(TruckDto truck)
+    {
+        Console.WriteLine($"Truck with plate {truck.LicensePlate} approved.");
+    }
+}
