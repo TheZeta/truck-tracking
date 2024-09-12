@@ -1,4 +1,5 @@
 ﻿using BlazorWasmClient.Shared.DTOs;
+using BlazorWasmClient.Shared.Enums;
 using System.Net.Http.Json;
 
 namespace BlazorWasmClient.Services
@@ -20,6 +21,12 @@ namespace BlazorWasmClient.Services
         public async Task AddAsync(TruckDto truckDto)
         {
             var response = await _httpClient.PostAsJsonAsync("api/trucks", truckDto);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task UpdateTruckStateAsync(string plate)
+        {
+            var response = await _httpClient.GetAsync($"api/trucks/{plate}/state");
             response.EnsureSuccessStatusCode();
         }
     }

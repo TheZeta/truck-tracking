@@ -26,6 +26,12 @@ namespace Infrastructure.Repositories
             return await _context.Trucks.FindAsync(id);
         }
 
+        public async Task<Truck> GetByPlateAsync(string plate)
+        {
+            return await _context.Trucks
+                .FirstOrDefaultAsync(t => t.LicensePlate.Equals(plate));
+        }
+
         public async Task AddAsync(Truck truck)
         {
             await _context.Trucks.AddAsync(truck);

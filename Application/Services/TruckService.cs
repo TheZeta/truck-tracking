@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Core.Entities;
+using Core.Enums;
 using Core.Interfaces;
 
 namespace Application.Services
@@ -20,7 +21,8 @@ namespace Application.Services
             {
                 LicensePlate = t.LicensePlate,
                 ClaimedRawMaterialWeight = t.ClaimedRawMaterialWeight,
-                RawMaterial = t.RawMaterial
+                RawMaterial = t.RawMaterial,
+                State = t.State
             }).ToList();
         }
 
@@ -33,7 +35,7 @@ namespace Application.Services
                 RawMaterial = truckDto.RawMaterial,
                 FirstWeighing = 0,
                 SecondWeighing = 0,
-                State = Core.Enums.TruckState.AwaitingWeighing,
+                State = TruckState.AwaitingWeighing,
                 IsVisibleOnList = true
             };
 
@@ -53,8 +55,24 @@ namespace Application.Services
             {
                 LicensePlate = truck.LicensePlate,
                 ClaimedRawMaterialWeight = truck.ClaimedRawMaterialWeight,
-                RawMaterial = truck.RawMaterial
+                RawMaterial = truck.RawMaterial,
+                State = truck.State
             };
+        }
+
+        public async Task UpdateStateAsync(string plate)
+        {
+            var truck = await _truckRepository.GetByPlateAsync(plate);
+
+            if (truck == null)
+            {
+                return;
+            }
+
+            Console.WriteLine(truck.State);
+
+            truck.Handle();
+            await _truckRepository.UpdateAsync(truck);
         }
     }
 }

@@ -46,5 +46,13 @@ namespace WebAPI.Controllers
 
             return Ok(truck);
         }
+
+        [HttpGet("{plate}/state")]
+        public async Task<IActionResult> UpdateState(string plate)
+        {
+            await _truckService.UpdateStateAsync(plate);
+
+            return NoContent();
+        }
     }
 }

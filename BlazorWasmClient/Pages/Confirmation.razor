@@ -11,6 +11,7 @@
                 <th>Plate</th>
                 <th>Raw Material</th>
                 <th>Weight (kg)</th>
+                <th>State</th
                 <th>Actions</th>
             </tr>
         </thead>
@@ -21,6 +22,7 @@
                     <td>@truck.LicensePlate</td>
                     <td>@truck.RawMaterial</td>
                     <td>@truck.ClaimedRawMaterialWeight</td>
+                    <td>@truck.State</td
                     <td>
                         <button class="btn btn-success" @onclick="() => ApproveTruck(truck)">Approve</button>
                     </td>
@@ -39,11 +41,17 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadTrucks();
+    }
+
+    private async Task LoadTrucks()
+    {
         trucks = await TruckService.GetVisibleTrucksAsync();
     }
 
-    private void ApproveTruck(TruckDto truck)
+    private async Task ApproveTruck(TruckDto truck)
     {
-        Console.WriteLine($"Truck with plate {truck.LicensePlate} approved.");
+        await TruckService.UpdateTruckStateAsync(truck.LicensePlate);
+        await LoadTrucks();
     }
 }

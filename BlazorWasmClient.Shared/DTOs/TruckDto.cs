@@ -15,5 +15,7 @@ namespace BlazorWasmClient.Shared.DTOs
         [Required]
         [Range(0, double.MaxValue, ErrorMessage = "Weight must be a positive number")]
         public RawMaterialType RawMaterial { get; set; }
+
+        public TruckState State { get; set; }
     }
 }
