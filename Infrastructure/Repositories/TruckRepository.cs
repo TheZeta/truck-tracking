@@ -1,4 +1,5 @@
-﻿using Core.Entities;
+﻿using BlazorWasmClient.Shared.Enums;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,13 @@ namespace Infrastructure.Repositories
                 _context.Trucks.Remove(truck);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<IEnumerable<Truck>> GetTrucksForEditAsync()
+        {
+            return await _context.Trucks
+                .Where(t => t.State == TruckState.AwaitingWeighing)
+                .ToListAsync();
         }
     }
 }

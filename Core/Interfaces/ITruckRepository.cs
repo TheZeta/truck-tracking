@@ -10,5 +10,6 @@ namespace Core.Interfaces
         Task AddAsync(Truck truck);
         Task UpdateAsync(Truck truck);
         Task DeleteAsync(int id);
+        Task<IEnumerable<Truck>> GetTrucksForEditAsync();
     }
 }

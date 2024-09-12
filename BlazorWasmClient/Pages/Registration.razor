@@ -1,8 +1,10 @@
 ﻿@page "/registration"
+@page "/registration/{Plate}"
 @using System.ComponentModel.DataAnnotations
 @using System.Reflection
 @inject TruckService TruckService
 @inject Blazored.Toast.Services.IToastService ToastService
+@inject NavigationManager Navigation
 
 <h3>Truck Details</h3>
 
@@ -12,13 +14,13 @@
 
     <div class="form-group">
         <label for="plate">Plate:</label>
-        <InputText id="plate" class="form-control" @bind-Value="truckDto.LicensePlate" />
+        <InputText id="plate" class="form-control" @bind-Value="truckDto.LicensePlate" disabled="@isEditing" />
         <ValidationMessage For="@(() => truckDto.LicensePlate)" />
     </div>
 
     <div class="form-group">
         <label for="rawMaterial">Raw Material:</label>
-        <InputSelect id="rawMaterial" class="form-control" @bind-Value="truckDto.RawMaterial">
+        <InputSelect id="rawMaterial" class="form-control" @bind-Value="truckDto.RawMaterial" disabled="@isEditing">
             <option value="">Select a material</option>
             @foreach (var material in rawMaterials)
             {
@@ -35,27 +37,67 @@
         <ValidationMessage For="@(() => truckDto.ClaimedRawMaterialWeight)" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">@((isEditing ? "Update" : "Submit"))</button>
 </EditForm>
 
 @code {
     private TruckDto truckDto = new TruckDto();
     private List<string> rawMaterials;
+    private bool isEditing = false;
 
-    protected override void OnInitialized()
+    [Parameter]
+    public string Plate { get; set; }
+
+    protected override async Task OnInitializedAsync()
     {
         rawMaterials = Enum.GetValues(typeof(RawMaterialType))
-                        .Cast<RawMaterialType>()
-                        .Select(e => e.ToString())
-                        .ToList();
+                            .Cast<RawMaterialType>()
+                            .Select(e => e.ToString())
+                            .ToList();
+
+        if (!string.IsNullOrEmpty(Plate))
+        {
+            isEditing = true;
+            await LoadTruckAsync(Plate);
+        }
+    }
+
+    private async Task LoadTruckAsync(string plate)
+    {
+        try
+        {
+            var truck = await TruckService.GetByPlateAsync(plate);
+            if (truck != null)
+            {
+                truckDto = truck;
+            }
+            else
+            {
+                ToastService.ShowWarning("Truck not found.");
+            }
+        }
+        catch (Exception ex)
+        {
+            ToastService.ShowError($"Error: {ex.Message}");
+        }
     }
 
     private async Task HandleSubmit()
     {
         try
         {
-            await TruckService.AddAsync(truckDto);
-            ToastService.ShowSuccess("Truck added successfully!");
+            if (isEditing)
+            {
+                await TruckService.UpdateAsync(truckDto);
+                await TruckService.UpdateTruckStateAsync(truckDto.LicensePlate);
+                ToastService.ShowSuccess("Truck updated successfully!");
+            }
+            else
+            {
+                await TruckService.AddAsync(truckDto);
+                ToastService.ShowSuccess("Truck added successfully!");
+            }
+            Navigation.NavigateTo("confirmation");
         }
         catch (Exception ex)
         {

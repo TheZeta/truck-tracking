@@ -1,0 +1,57 @@
+﻿@page "/editing"
+@inject TruckService TruckService
+@inject NavigationManager Navigation
+
+<h3>Truck List</h3>
+
+@if (trucks != null && trucks.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Plate</th>
+                <th>Raw Material</th>
+                <th>Weight (kg)</th>
+                <th>State</th
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var truck in trucks)
+            {
+                <tr>
+                    <td>@truck.LicensePlate</td>
+                    <td>@truck.RawMaterial</td>
+                    <td>@truck.ClaimedRawMaterialWeight</td>
+                    <td>@truck.State</td
+                    <td>
+                        <button class="btn btn-success" @onclick="() => EditTruck(truck)">Edit</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No trucks available.</p>
+}
+
+@code {
+    private IEnumerable<TruckDto> trucks;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTrucks();
+    }
+
+    private async Task LoadTrucks()
+    {
+        trucks = await TruckService.GetTrucksForEditAsync();
+    }
+
+    private async Task EditTruck(TruckDto truck)
+    {
+        Navigation.NavigateTo($"/registration/{truck.LicensePlate}");
+    }
+}

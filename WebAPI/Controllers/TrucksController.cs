@@ -32,20 +32,21 @@ namespace WebAPI.Controllers
 
             await _truckService.AddAsync(truckDto);
 
-            return CreatedAtAction(nameof(GetTruckById), new { id = truckDto.LicensePlate }, truckDto);
+            //return CreatedAtAction(nameof(GetTruckById), new { plate = truckDto.LicensePlate }, truckDto);
+            return Ok();
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetTruckById(int id)
-        {
-            var truck = await _truckService.GetByIdAsync(id);
-            if (truck == null)
-            {
-                return NotFound();
-            }
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetTruckById(int id)
+        //{
+        //    var truck = await _truckService.GetByIdAsync(id);
+        //    if (truck == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            return Ok(truck);
-        }
+        //    return Ok(truck);
+        //}
 
         [HttpGet("{plate}/state")]
         public async Task<IActionResult> UpdateState(string plate)
@@ -53,6 +54,28 @@ namespace WebAPI.Controllers
             await _truckService.UpdateStateAsync(plate);
 
             return NoContent();
+        }
+
+        [HttpGet("editable")]
+        public async Task<IActionResult> GetTrucksForEditAsync()
+        {
+            var trucks = await _truckService.GetTrucksForEditAsync();
+            return Ok(trucks);
+        }
+
+        [HttpGet("{plate}")]
+        public async Task<IActionResult> GetByPlateAsync(string plate)
+        {
+            var trucks = await _truckService.GetByPlateAsync(plate);
+            return Ok(trucks);
+        }
+
+        [HttpPut("{plate}")]
+        public async Task<IActionResult> UpdateAsync(string plate, [FromBody] TruckDto truckDto)
+        {
+            await _truckService.UpdateAsync(truckDto);
+
+            return NoContent(); // 204 No Content response to indicate successful update
         }
     }
 }

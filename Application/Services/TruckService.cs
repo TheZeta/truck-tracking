@@ -35,7 +35,7 @@ namespace Application.Services
                 RawMaterial = truckDto.RawMaterial,
                 FirstWeighing = 0,
                 SecondWeighing = 0,
-                State = TruckState.AwaitingWeighing,
+                State = TruckState.AwaitingFirstApproval,
                 IsVisibleOnList = true
             };
 
@@ -69,9 +69,51 @@ namespace Application.Services
                 return;
             }
 
-            Console.WriteLine(truck.State);
-
             truck.Handle();
+            await _truckRepository.UpdateAsync(truck);
+        }
+
+        public async Task<IEnumerable<TruckDto>> GetTrucksForEditAsync()
+        {
+            var trucks = await _truckRepository.GetTrucksForEditAsync();
+            return trucks.Select(t => new TruckDto
+            {
+                LicensePlate = t.LicensePlate,
+                ClaimedRawMaterialWeight = t.ClaimedRawMaterialWeight,
+                RawMaterial = t.RawMaterial,
+                State = t.State
+            }).ToList();
+        }
+
+        public async Task<TruckDto> GetByPlateAsync(string plate)
+        {
+            var truck = await _truckRepository.GetByPlateAsync(plate);
+
+            if (truck == null)
+            {
+                return null;
+            }
+
+            return new TruckDto
+            {
+                LicensePlate = truck.LicensePlate,
+                ClaimedRawMaterialWeight = truck.ClaimedRawMaterialWeight,
+                RawMaterial = truck.RawMaterial,
+                State = truck.State
+            };
+        }
+
+        public async Task UpdateAsync(TruckDto truckDto)
+        {
+            var truck = await _truckRepository.GetByPlateAsync(truckDto.LicensePlate);
+
+            if (truck == null)
+            {
+                return;
+            }
+
+            truck.ClaimedRawMaterialWeight = truckDto.ClaimedRawMaterialWeight;
+
             await _truckRepository.UpdateAsync(truck);
         }
     }

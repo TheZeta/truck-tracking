@@ -23,9 +23,11 @@
                     <td>@truck.RawMaterial</td>
                     <td>@truck.ClaimedRawMaterialWeight</td>
                     <td>@truck.State</td
-                    <td>
-                        <button class="btn btn-success" @onclick="() => ApproveTruck(truck)">Approve</button>
-                    </td>
+                    <button class="btn btn-custom-green-text" 
+                                @onclick="() => ApproveTruck(truck)" 
+                                disabled="@(!CanApproveTruck(truck.State))">
+                            Approve
+                    </button>
                 </tr>
             }
         </tbody>
@@ -54,4 +56,29 @@ else
         await TruckService.UpdateTruckStateAsync(truck.LicensePlate);
         await LoadTrucks();
     }
+
+    private bool CanApproveTruck(TruckState state)
+    {
+        return state != TruckState.AwaitingWeighing;
+    }
 }
+
+<style>
+    .btn-custom-green-text {
+        color: #28a745; /* Green text color */
+        border-color: #28a745; /* Optional: Green border */
+    }
+
+    .btn-custom-green-text:hover, 
+    .btn-custom-green-text:focus {
+        background-color: #e9f5ee; /* Optional: Light green background when hovered */
+        border-color: #28a745;
+    }
+
+    .btn-custom-green-text:disabled {
+        color: #28a745;
+        background-color: #f8f9fa; /* Light grey background for disabled */
+        border-color: #28a745;
+        opacity: 0.65; /* Reduce opacity to make it appear disabled */
+    }
+</style>
