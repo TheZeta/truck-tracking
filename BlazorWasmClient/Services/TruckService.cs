@@ -41,7 +41,7 @@ namespace BlazorWasmClient.Services
 
         public async Task UpdateAsync(TruckDto truckDto)
         {
-            await _httpClient.PutAsJsonAsync($"api/trucks/{truckDto.LicensePlate}", truckDto);
+            await _httpClient.PutAsJsonAsync($"api/trucks/{truckDto.Plate}", truckDto);
         }
     }
 }

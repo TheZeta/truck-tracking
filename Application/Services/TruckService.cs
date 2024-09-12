@@ -26,10 +26,7 @@ namespace Application.Services
         public async Task AddAsync(TruckDto truckDto)
         {
             var truck = _mapper.Map<Truck>(truckDto);
-            truck.FirstWeighing = 0;
-            truck.SecondWeighing = 0;
             truck.State = TruckState.AwaitingFirstApproval;
-            truck.IsVisibleOnList = true;
 
             await _truckRepository.AddAsync(truck);
         }
@@ -68,10 +65,10 @@ namespace Application.Services
 
         public async Task UpdateAsync(TruckDto truckDto)
         {
-            var truck = await _truckRepository.GetByPlateAsync(truckDto.LicensePlate);
+            var truck = await _truckRepository.GetByPlateAsync(truckDto.Plate);
             if (truck == null) return;
 
-            truck.ClaimedRawMaterialWeight = truckDto.ClaimedRawMaterialWeight;
+            truck.Weight = truckDto.Weight;
             await _truckRepository.UpdateAsync(truck);
         }
     }

@@ -18,7 +18,7 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<Truck>> GetVisibleTrucksAsync()
         {
             return await _context.Trucks
-                .Where(t => t.IsVisibleOnList)
+                .Where(t => t.State != TruckState.Completed)
                 .ToListAsync();
         }
 
@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
         public async Task<Truck> GetByPlateAsync(string plate)
         {
             return await _context.Trucks
-                .FirstOrDefaultAsync(t => t.LicensePlate.Equals(plate));
+                .FirstOrDefaultAsync(t => t.Plate.Equals(plate));
         }
 
         public async Task AddAsync(Truck truck)

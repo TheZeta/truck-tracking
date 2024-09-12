@@ -19,9 +19,9 @@
             @foreach (var truck in trucks)
             {
                 <tr>
-                    <td>@truck.LicensePlate</td>
+                    <td>@truck.Plate</td>
                     <td>@truck.RawMaterial</td>
-                    <td>@truck.ClaimedRawMaterialWeight</td>
+                    <td>@truck.Weight</td>
                     <td>@truck.State</td
                     <button class="btn btn-custom-green-text" 
                                 @onclick="() => ApproveTruck(truck)" 
@@ -53,7 +53,7 @@ else
 
     private async Task ApproveTruck(TruckDto truck)
     {
-        await TruckService.UpdateTruckStateAsync(truck.LicensePlate);
+        await TruckService.UpdateTruckStateAsync(truck.Plate);
         await LoadTrucks();
     }
 

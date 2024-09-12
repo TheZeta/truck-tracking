@@ -14,8 +14,8 @@
 
     <div class="form-group">
         <label for="plate">Plate:</label>
-        <InputText id="plate" class="form-control" @bind-Value="truckDto.LicensePlate" disabled="@isEditing" />
-        <ValidationMessage For="@(() => truckDto.LicensePlate)" />
+        <InputText id="plate" class="form-control" @bind-Value="truckDto.Plate" disabled="@isEditing" />
+        <ValidationMessage For="@(() => truckDto.Plate)" />
     </div>
 
     <div class="form-group">
@@ -32,9 +32,9 @@
 
     <div class="form-group">
         <label for="weight">Weight:</label>
-        <InputNumber id="weight" class="form-control" @bind-Value="truckDto.ClaimedRawMaterialWeight" />
+        <InputNumber id="weight" class="form-control" @bind-Value="truckDto.Weight" />
         <span class="form-control-plaintext">kg</span>
-        <ValidationMessage For="@(() => truckDto.ClaimedRawMaterialWeight)" />
+        <ValidationMessage For="@(() => truckDto.Weight)" />
     </div>
 
     <button type="submit" class="btn btn-primary">@((isEditing ? "Update" : "Submit"))</button>
@@ -89,7 +89,7 @@
             if (isEditing)
             {
                 await TruckService.UpdateAsync(truckDto);
-                await TruckService.UpdateTruckStateAsync(truckDto.LicensePlate);
+                await TruckService.UpdateTruckStateAsync(truckDto.Plate);
                 ToastService.ShowSuccess("Truck updated successfully!");
             }
             else

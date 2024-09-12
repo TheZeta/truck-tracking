@@ -7,13 +7,10 @@ namespace Core.Entities
     public class Truck
     {
         public int Id { get; set; }
-        public string LicensePlate { get; set; }
-        public int ClaimedRawMaterialWeight { get; set; }
+        public string Plate { get; set; }
+        public int Weight { get; set; }
         public RawMaterialType RawMaterial { get; set; }
-        public int FirstWeighing { get; set; }
-        public int SecondWeighing { get; set; }
         public TruckState State { get; set; }
-        public bool IsVisibleOnList { get; set; }
 
         [NotMapped]
         private ITruckState _state

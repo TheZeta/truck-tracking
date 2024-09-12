@@ -20,9 +20,9 @@
             @foreach (var truck in trucks)
             {
                 <tr>
-                    <td>@truck.LicensePlate</td>
+                    <td>@truck.Plate</td>
                     <td>@truck.RawMaterial</td>
-                    <td>@truck.ClaimedRawMaterialWeight</td>
+                    <td>@truck.Weight</td>
                     <td>@truck.State</td
                     <td>
                         <button class="btn btn-success" @onclick="() => EditTruck(truck)">Edit</button>
@@ -52,6 +52,6 @@ else
 
     private async Task EditTruck(TruckDto truck)
     {
-        Navigation.NavigateTo($"/registration/{truck.LicensePlate}");
+        Navigation.NavigateTo($"/registration/{truck.Plate}");
     }
 }
