@@ -1,6 +1,6 @@
-﻿using Application.DTOs;
+﻿using BlazorWasmClient.Shared.DTOs;
+using BlazorWasmClient.Shared.Enums;
 using Core.Entities;
-using Core.Enums;
 using Core.Interfaces;
 
 namespace Application.Services

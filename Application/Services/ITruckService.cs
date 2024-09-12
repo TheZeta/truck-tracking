@@ -1,4 +1,4 @@
-﻿using Application.DTOs;
+﻿using BlazorWasmClient.Shared.DTOs;
 
 namespace Application.Services
 {

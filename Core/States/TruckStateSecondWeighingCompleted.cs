@@ -1,5 +1,5 @@
-﻿using Core.Entities;
-using Core.Enums;
+﻿using BlazorWasmClient.Shared.Enums;
+using Core.Entities;
 
 namespace Core.States
 {

@@ -1,4 +1,4 @@
-﻿using Core.Enums;
+﻿using BlazorWasmClient.Shared.Enums;
 using Core.States;
 using System.ComponentModel.DataAnnotations.Schema;
 
