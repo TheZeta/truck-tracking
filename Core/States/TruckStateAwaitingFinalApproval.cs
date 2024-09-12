@@ -3,7 +3,7 @@ using Core.Entities;
 
 namespace Core.States
 {
-    public class TruckStateSecondWeighingCompleted : ITruckState
+    internal class TruckStateAwaitingFinalApproval : ITruckState
     {
         public void Handle(Truck truck)
         {

@@ -7,7 +7,7 @@ namespace Core.States
     {
         public void Handle(Truck truck)
         {
-            truck.SetState(TruckState.FirstWeighingCompleted);
+            truck.SetState(TruckState.AwaitingFinalApproval);
         }
     }
 }

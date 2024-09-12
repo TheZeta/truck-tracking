@@ -2,9 +2,9 @@
 {
     public enum TruckState
     {
+        AwaitingFirstApproval,
         AwaitingWeighing,
-        FirstWeighingCompleted,
-        SecondWeighingCompleted,
+        AwaitingFinalApproval,
         Completed
     }
 }

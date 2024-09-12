@@ -48,9 +48,9 @@ namespace Core.Entities
         {
             return state switch
             {
+                TruckState.AwaitingFirstApproval => new TruckStateAwaitingFirstApproval(),
                 TruckState.AwaitingWeighing => new TruckStateAwaitingWeighing(),
-                TruckState.FirstWeighingCompleted => new TruckStateFirstWeighingCompleted(),
-                TruckState.SecondWeighingCompleted => new TruckStateSecondWeighingCompleted(),
+                TruckState.AwaitingFinalApproval => new TruckStateAwaitingFinalApproval(),
                 TruckState.Completed => new TruckStateCompleted(),
                 _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
             };
