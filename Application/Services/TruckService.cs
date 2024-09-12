@@ -1,4 +1,5 @@
-﻿using BlazorWasmClient.Shared.DTOs;
+﻿using AutoMapper;
+using BlazorWasmClient.Shared.DTOs;
 using BlazorWasmClient.Shared.Enums;
 using Core.Entities;
 using Core.Interfaces;
@@ -8,36 +9,27 @@ namespace Application.Services
     public class TruckService : ITruckService
     {
         private readonly ITruckRepository _truckRepository;
+        private readonly IMapper _mapper;
 
-        public TruckService(ITruckRepository truckRepository)
+        public TruckService(ITruckRepository truckRepository, IMapper mapper)
         {
             _truckRepository = truckRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<TruckDto>> GetVisibleTrucksAsync()
         {
             var trucks = await _truckRepository.GetVisibleTrucksAsync();
-            return trucks.Select(t => new TruckDto
-            {
-                LicensePlate = t.LicensePlate,
-                ClaimedRawMaterialWeight = t.ClaimedRawMaterialWeight,
-                RawMaterial = t.RawMaterial,
-                State = t.State
-            }).ToList();
+            return _mapper.Map<IEnumerable<TruckDto>>(trucks);
         }
 
         public async Task AddAsync(TruckDto truckDto)
         {
-            var truck = new Truck
-            {
-                LicensePlate = truckDto.LicensePlate,
-                ClaimedRawMaterialWeight = truckDto.ClaimedRawMaterialWeight,
-                RawMaterial = truckDto.RawMaterial,
-                FirstWeighing = 0,
-                SecondWeighing = 0,
-                State = TruckState.AwaitingFirstApproval,
-                IsVisibleOnList = true
-            };
+            var truck = _mapper.Map<Truck>(truckDto);
+            truck.FirstWeighing = 0;
+            truck.SecondWeighing = 0;
+            truck.State = TruckState.AwaitingFirstApproval;
+            truck.IsVisibleOnList = true;
 
             await _truckRepository.AddAsync(truck);
         }
@@ -46,28 +38,15 @@ namespace Application.Services
         {
             var truck = await _truckRepository.GetByIdAsync(id);
 
-            if (truck == null)
-            {
-                return null;
-            }
+            if (truck == null) return null;
 
-            return new TruckDto
-            {
-                LicensePlate = truck.LicensePlate,
-                ClaimedRawMaterialWeight = truck.ClaimedRawMaterialWeight,
-                RawMaterial = truck.RawMaterial,
-                State = truck.State
-            };
+            return _mapper.Map<TruckDto>(truck);
         }
 
         public async Task UpdateStateAsync(string plate)
         {
             var truck = await _truckRepository.GetByPlateAsync(plate);
-
-            if (truck == null)
-            {
-                return;
-            }
+            if (truck == null) return;
 
             truck.Handle();
             await _truckRepository.UpdateAsync(truck);
@@ -76,44 +55,23 @@ namespace Application.Services
         public async Task<IEnumerable<TruckDto>> GetTrucksForEditAsync()
         {
             var trucks = await _truckRepository.GetTrucksForEditAsync();
-            return trucks.Select(t => new TruckDto
-            {
-                LicensePlate = t.LicensePlate,
-                ClaimedRawMaterialWeight = t.ClaimedRawMaterialWeight,
-                RawMaterial = t.RawMaterial,
-                State = t.State
-            }).ToList();
+            return _mapper.Map<IEnumerable<TruckDto>>(trucks);
         }
 
         public async Task<TruckDto> GetByPlateAsync(string plate)
         {
             var truck = await _truckRepository.GetByPlateAsync(plate);
+            if (truck == null) return null;
 
-            if (truck == null)
-            {
-                return null;
-            }
-
-            return new TruckDto
-            {
-                LicensePlate = truck.LicensePlate,
-                ClaimedRawMaterialWeight = truck.ClaimedRawMaterialWeight,
-                RawMaterial = truck.RawMaterial,
-                State = truck.State
-            };
+            return _mapper.Map<TruckDto>(truck);
         }
 
         public async Task UpdateAsync(TruckDto truckDto)
         {
             var truck = await _truckRepository.GetByPlateAsync(truckDto.LicensePlate);
-
-            if (truck == null)
-            {
-                return;
-            }
+            if (truck == null) return;
 
             truck.ClaimedRawMaterialWeight = truckDto.ClaimedRawMaterialWeight;
-
             await _truckRepository.UpdateAsync(truck);
         }
     }

@@ -1,3 +1,4 @@
+using Application.Mappings;
 using Application.Services;
 using Core.Interfaces;
 using Infrastructure.Data;
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<ITruckRepository, TruckRepository>();
 builder.Services.AddScoped<ITruckService, TruckService>();
+
+builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 builder.Services.AddCors(options =>
 {
