@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Entities\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BlazorWasmClient.Shared\BlazorWasmClient.Shared.csproj" />
   </ItemGroup>
 

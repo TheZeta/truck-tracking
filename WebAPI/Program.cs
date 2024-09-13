@@ -3,6 +3,7 @@ using Application.Services;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     b => b.MigrationsAssembly("Infrastructure")));
 
 builder.Services.AddScoped<ITruckRepository, TruckRepository>();
+builder.Services.AddScoped<IOperationLogRepository, OperationLogRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ITruckService, TruckService>();
 
 builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);

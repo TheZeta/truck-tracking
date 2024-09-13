@@ -5,12 +5,13 @@ namespace Infrastructure.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Truck> Trucks { get; set; }
-
         public AppDbContext(DbContextOptions<AppDbContext> options)
-        : base(options)
+            : base(options)
         {
         }
+
+        public DbSet<Truck> Trucks { get; set; }
+        public DbSet<OperationLog> OperationLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
