@@ -23,6 +23,10 @@ namespace Infrastructure.Data
                 entity.Property(t => t.State)
                       .HasConversion<int>();
             });
+
+            modelBuilder.Entity<Truck>()
+            .HasIndex(t => t.Plate)
+            .IsUnique();
         }
     }
 }
